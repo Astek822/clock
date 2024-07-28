@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analog Clock with Images</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+        .clock {
+            width: 4138px;
+            height: 3072px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+        }
+        .hand {
+            position: absolute;
+            bottom: 60%;
+            left: 50%;
+            transform-origin: 50% 100%;
+			transition: transform 0.1s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+			pointer-events: none;
+        }
+        .hour {
+            width: 600px;
+            height: 600px;
+            margin-left: -300px;
+            margin-bottom: -340px;
+			filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.3));
+        }
+        .minute {
+            width: 800px;
+            height: 800px;
+            margin-left: -400px;
+            margin-bottom: -340px;
+			filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.4));
+        }
+        .second {
+            width: 900px;
+            height: 900px;
+            margin-left: -450px;
+            margin-bottom: -340px;
+			filter: drop-shadow(0 0 4px rgba(255, 0, 0, 0.5));
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="clock" :style="clockFaceStyle">
+            <img class="hand hour" :src="hourHandImage" :style="hourHandStyle">
+            <img class="hand minute" :src="minuteHandImage" :style="minuteHandStyle">
+            <img class="hand second" :src="secondHandImage" :style="secondHandStyle">
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                time: new Date(),
+                clockFaceImage: 'dream_clock3.jpg',
+                hourHandImage: 'hour.png',
+                minuteHandImage: 'minute.png',
+                secondHandImage: 'second.png'
+            },
+            computed: {
+                clockFaceStyle() {
+                    return { backgroundImage: `url(${this.clockFaceImage})` };
+                },
+                hourHandStyle() {
+                    const hours = this.time.getHours() % 12;
+                    const minutes = this.time.getMinutes();
+                    const angle = (hours + minutes / 60) * 30;
+                    return { transform: `rotate(${angle}deg)` };
+                },
+                minuteHandStyle() {
+                    const minutes = this.time.getMinutes();
+                    const angle = minutes * 6;
+                    return { transform: `rotate(${angle}deg)` };
+                },
+                secondHandStyle() {
+                    const seconds = this.time.getSeconds();
+                    const angle = seconds * 6;
+                    return { transform: `rotate(${angle}deg)` };
+                }
+            },
+            mounted() {
+                setInterval(() => {
+                    this.time = new Date();
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
